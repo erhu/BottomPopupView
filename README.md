@@ -4,7 +4,7 @@
 
 ## How to Use
 xml
-```
+```xml
 <cn.erhu.android.bottompopup.BottomPopupView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/popup_view_root"
@@ -14,7 +14,7 @@ xml
 ```
 
 java
-```
+```java
 // Init popupView.
 mPopupView = (BottomPopupView) view.findViewById(R.id.popup_view_root);
 mPopupView.setPopListener(new BottomPopupView.PopListener() {
