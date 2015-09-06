@@ -1,4 +1,7 @@
 # BottomPopupView
+## Preview
+![](https://github.com/erhu/BottomPopupView/blob/master/resources/demo.gif)
+
 ## How to Use
 xml
 ```
@@ -41,5 +44,3 @@ java
         // Add ContentView to PopupView and set height of ContentView And Header.
         mPopupView.init(mContentContainer, dp2px(SHEET_HEIGHT), dp2px(HEADER_HEIGHT));
 ```
-## Preview
-![](https://github.com/erhu/BottomPopupView/blob/master/resources/demo.gif)

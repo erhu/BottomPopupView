@@ -1,8 +1,8 @@
-package view.android.erhu.cn.bottompopupview;
+package cn.erhu.android.bottompopup;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static view.android.erhu.cn.bottompopupview.BottomPopupView.State.CLOSED;
-import static view.android.erhu.cn.bottompopupview.BottomPopupView.State.OPENED;
+import static cn.erhu.android.bottompopup.BottomPopupView.State.CLOSED;
+import static cn.erhu.android.bottompopup.BottomPopupView.State.OPENED;
 
 import android.content.Context;
 import android.os.Build;
@@ -355,7 +355,7 @@ public class BottomPopupView extends FrameLayout {
         OPENED // 展开
     }
 
-    interface PopListener {
+    public interface PopListener {
         void onOpened();
 
         void onClosed();

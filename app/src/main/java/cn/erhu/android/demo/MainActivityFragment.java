@@ -1,4 +1,4 @@
-package view.android.erhu.cn.bottompopupview;
+package cn.erhu.android.demo;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import cn.erhu.android.R;
+import cn.erhu.android.bottompopup.BottomPopupView;
 
 /**
  * A placeholder fragment containing a simple view.
