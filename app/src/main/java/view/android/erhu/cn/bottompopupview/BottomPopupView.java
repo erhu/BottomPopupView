@@ -45,6 +45,7 @@ public class BottomPopupView extends FrameLayout {
     private int mContainerHeight;
     private State mState = CLOSED;
     private ViewDragHelper mDragger;
+    private PopListener mPopListener;
     private LayoutParams mContainerLp;
     private android.view.View mContentView;
     private AlphaAnimation mAnimHideDimView;
@@ -119,6 +120,9 @@ public class BottomPopupView extends FrameLayout {
                         // 如果是通过拖拽的方式完成上拉，此处需要设置 bottomMargin,
                         // 以避免点击 dimView 收起时卡顿的问题。
                         setBottomMargin(0);
+                        if (mPopListener != null) {
+                            mPopListener.onOpened();
+                        }
                     }
 
                     void _popDown() {
@@ -126,6 +130,9 @@ public class BottomPopupView extends FrameLayout {
                         changeStateWithDimView(CLOSED);
                         // 同上
                         setBottomMargin(mInitBottomMarginOfContainer);
+                        if (mPopListener != null) {
+                            mPopListener.onClosed();
+                        }
                     }
 
                     @Override
@@ -216,6 +223,9 @@ public class BottomPopupView extends FrameLayout {
                 changeState(OPENED);
                 mContainer.clearAnimation();
                 setBottomMargin(endY);
+                if (mPopListener != null) {
+                    mPopListener.onOpened();
+                }
             }
         });
         mContainer.startAnimation(popAnimation);
@@ -239,6 +249,9 @@ public class BottomPopupView extends FrameLayout {
                 changeState(CLOSED);
                 mContainer.clearAnimation();
                 setBottomMargin(endY);
+                if (mPopListener != null) {
+                    mPopListener.onClosed();
+                }
             }
         });
 
@@ -333,9 +346,19 @@ public class BottomPopupView extends FrameLayout {
         }
     }
 
+    public void setPopListener(PopListener listener) {
+        mPopListener = listener;
+    }
+
     enum State {
         CLOSED, // 收起
         OPENED // 展开
+    }
+
+    interface PopListener {
+        void onOpened();
+
+        void onClosed();
     }
 
     private static class MyAnimListener implements Animation.AnimationListener {

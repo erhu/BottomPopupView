@@ -9,7 +9,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -21,7 +23,7 @@ public class MainActivityFragment extends Fragment {
 
     private BottomPopupView mPopupView;
     private View mContentContainer;
-    private View mHeader;
+    private Button mHeader;
     private View mContent;
 
     public MainActivityFragment() {
@@ -36,9 +38,24 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mPopupView = (BottomPopupView) view.findViewById(R.id.popup_view_root);
+        mPopupView.setPopListener(new BottomPopupView.PopListener() {
+            @Override
+            public void onOpened() {
+                if (mHeader != null) {
+                    mHeader.setText("Click me to popDown");
+                }
+            }
+
+            @Override
+            public void onClosed() {
+                if (mHeader != null) {
+                    mHeader.setText("Click me to popUp");
+                }
+            }
+        });
         mContentContainer = LayoutInflater.from(getContext()).inflate(R.layout.bottom_popup_content, null);
 
-        mHeader = mContentContainer.findViewById(R.id.bottom_pop_up_header);
+        mHeader = (Button) mContentContainer.findViewById(R.id.bottom_pop_up_header);
         mHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,10 +68,15 @@ public class MainActivityFragment extends Fragment {
         });
 
         mContent = mContentContainer.findViewById(R.id.bottom_pop_up_content);
+        mContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "This is Content Area", Toast.LENGTH_SHORT).show();
+            }
+        });
         mContent.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, dp2px((SHEET_HEIGHT - HEADER_HEIGHT))));
 
         mPopupView.init(mContentContainer, dp2px(SHEET_HEIGHT), dp2px(HEADER_HEIGHT));
-
     }
 
     private int dp2px(int dp) {
