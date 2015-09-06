@@ -19,9 +19,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
- * 使用 ViewDragHelper 实现的 BottomPopupView
+ * BottomPopupView implemented by ViewDraggerHelper.
  * <p/>
- * 注：此视图不适合添加垂直的 ScrollView或ListView 来显示内容。
+ * Attention：ScrollView and ListView is not supported as Content.
  *
  * @author erhu
  * @version 1.0
@@ -30,8 +30,8 @@ import android.widget.LinearLayout;
 public class BottomPopupView extends FrameLayout {
 
     private static final int DURATION = 300;
-    // 触发 PopupView 动画的最小速率
     private static final float INTERPOLATOR = 3;
+    // min velocity to start anim.
     private static final int VELOCITY_MIN = 2000;
     private static final float ALPHA_TARGET = 0.3f;
 
@@ -91,7 +91,7 @@ public class BottomPopupView extends FrameLayout {
 
                     @Override
                     public int clampViewPositionVertical(View v, int top, int dy) {
-                        // 垂直方向中 top 的范围[mMinTop, mMaxTop]
+                        // [mMinTop, mMaxTop]
                         return Math.min(Math.max(mMinTop, top), mMaxTop);
                     }
 
@@ -103,7 +103,6 @@ public class BottomPopupView extends FrameLayout {
                             _popup();
                         } else {
                             int top = v.getTop();
-                            // 改变 Sheet 回弹方向的分界值
                             int topWhenChangeAnimDirection = (int) (mPageHeight - mContainerHeight * 0.5f);
                             if (top < topWhenChangeAnimDirection) {
                                 _popup();
@@ -117,8 +116,8 @@ public class BottomPopupView extends FrameLayout {
                     void _popup() {
                         mDragger.settleCapturedViewAt(0, mMinTop);
                         changeStateWithDimView(OPENED);
-                        // 如果是通过拖拽的方式完成上拉，此处需要设置 bottomMargin,
-                        // 以避免点击 dimView 收起时卡顿的问题。
+                        // If popuped by pull, set bottomMargin here to avoid animation block
+                        // when click to popDown.
                         setBottomMargin(0);
                         if (mPopListener != null) {
                             mPopListener.onOpened();
@@ -128,7 +127,6 @@ public class BottomPopupView extends FrameLayout {
                     void _popDown() {
                         mDragger.settleCapturedViewAt(0, mMaxTop);
                         changeStateWithDimView(CLOSED);
-                        // 同上
                         setBottomMargin(mInitBottomMarginOfContainer);
                         if (mPopListener != null) {
                             mPopListener.onClosed();
@@ -174,9 +172,6 @@ public class BottomPopupView extends FrameLayout {
         return changed;
     }
 
-    /**
-     * 显示蒙板
-     */
     private void showDimView() {
         if (Build.VERSION.SDK_INT < 14) {
             return;
@@ -188,9 +183,6 @@ public class BottomPopupView extends FrameLayout {
         mDimView.startAnimation(mAnimShowDimView);
     }
 
-    /**
-     * 隐藏蒙板
-     */
     private void hideDimView() {
         if (Build.VERSION.SDK_INT < 14) {
             return;
@@ -199,16 +191,10 @@ public class BottomPopupView extends FrameLayout {
         mDimView.startAnimation(mAnimHideDimView);
     }
 
-    /**
-     * 视图是否展开
-     */
     public boolean isOpened() {
         return mState == OPENED;
     }
 
-    /**
-     * 收起展开
-     */
     public void popup() {
         int startY = mContainerLp.bottomMargin;
         final int endY = 0;
@@ -232,9 +218,6 @@ public class BottomPopupView extends FrameLayout {
         showDimView();
     }
 
-    /**
-     * 收起视图
-     */
     public void popDown() {
         int startY = mContainerLp.bottomMargin;
         final int endY = mInitBottomMarginOfContainer;
@@ -259,9 +242,6 @@ public class BottomPopupView extends FrameLayout {
         hideDimView();
     }
 
-    /**
-     * 设置 Container 的 bottomMargin
-     */
     private void setBottomMargin(int margin) {
         if (margin < mInitBottomMarginOfContainer) {
             margin = mInitBottomMarginOfContainer;
@@ -272,15 +252,8 @@ public class BottomPopupView extends FrameLayout {
         mContainer.setLayoutParams(mContainerLp);
     }
 
-    /**
-     * 初始化
-     *
-     * @param v             内容视图
-     * @param contentHeight 视图的高度
-     * @param headerHeight  视图收起时，露头的高度
-     */
-    public void init(View v, int contentHeight, int headerHeight) {
-        mContainerHeight = contentHeight;
+    public void init(View v, int containerHeight, int headerHeight) {
+        mContainerHeight = containerHeight;
         mHeaderHeight = headerHeight;
         mContentView = v;
 
@@ -299,9 +272,6 @@ public class BottomPopupView extends FrameLayout {
         addView(mContainer);
     }
 
-    /**
-     * 初始化蒙板
-     */
     private void initDimView() {
         mDimView = new View(getContext());
         FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
@@ -351,8 +321,7 @@ public class BottomPopupView extends FrameLayout {
     }
 
     enum State {
-        CLOSED, // 收起
-        OPENED // 展开
+        CLOSED, OPENED
     }
 
     public interface PopListener {
